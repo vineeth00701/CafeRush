@@ -241,8 +241,13 @@ function getCustomer(): { name: string; email: string; avatar?: string } | null 
   }
 }
 function setCustomer(c: { name: string; email: string; avatar?: string } | null) {
-  if (c) sessionStorage.setItem(CUSTOMER_KEY, JSON.stringify(c));
-  else sessionStorage.removeItem(CUSTOMER_KEY);
+  if (typeof window === "undefined") return;
+  try {
+    if (c) sessionStorage.setItem(CUSTOMER_KEY, JSON.stringify(c));
+    else sessionStorage.removeItem(CUSTOMER_KEY);
+  } catch {
+    // ignore sessionStorage errors
+  }
 }
 
 function LoginPage() {

@@ -64,7 +64,11 @@ const askBotFn = createServerFn({ method: "POST" })
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${openRouterKey}`,
-            "HTTP-Referer": "http://localhost:8080",
+            "HTTP-Referer": process.env.VERCEL_PROJECT_PRODUCTION_URL
+              ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+              : process.env.VERCEL_URL
+                ? `https://${process.env.VERCEL_URL}`
+                : "https://odoo-cafe.vercel.app",
             "X-Title": "OdooCafé",
           },
           body: JSON.stringify({

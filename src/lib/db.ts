@@ -1,10 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = 
-  process.env.MONGODB_URI || 
-  (import.meta as any).env?.MONGODB_URI || 
-  "mongodb+srv://suryaprakashd22007_db_user:TJwFUajI3DPZgCit@odoo-cafe.in7m8xd.mongodb.net/Odoo-Cafe?retryWrites=true&w=majority";
-
 let cached = (globalThis as any).mongoose;
 
 if (!cached) {
@@ -12,6 +7,13 @@ if (!cached) {
 }
 
 export async function connectToDatabase() {
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    throw new Error(
+      "Invalid/Missing environment variable: MONGODB_URI. Please set MONGODB_URI in your environment variables.",
+    );
+  }
   if (cached.conn) {
     return cached.conn;
   }
@@ -22,7 +24,7 @@ export async function connectToDatabase() {
     };
 
     console.log("Connecting to MongoDB...");
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
+    cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
       console.log("MongoDB connected successfully!");
       return mongooseInstance;
     });
